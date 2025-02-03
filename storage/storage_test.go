@@ -1,26 +1,23 @@
 package storage
 
 import (
-	"io/ioutil"
-	"os"
+	"io"
+	"strings"
 	"testing"
 )
 
-func TestWriteToFile(t *testing.T) {
-	filename := "test.txt"
-	text := "Привет, мир!"
+func TestWrite(t *testing.T) {
+	var storage = Storage{path: "/Users/sergei/code/sergio-fry/file-storage/data"}
 
-	writeToFile(filename, text)
+	storage.write("foo", strings.NewReader("bar"))
 
-	data, err := ioutil.ReadFile(filename)
+	var result, err = io.ReadAll(storage.read("foo"))
+
 	if err != nil {
-		t.Errorf("Ошибка чтения файла: %v", err)
+		t.Errorf("Ошибка чтения: %v", err)
 	}
 
-	if string(data) != text {
-		t.Errorf("Ожидаемый текст: %s, но получен: %s", text, string(data))
+	if string(result) != "bar" {
+		t.Errorf("Ожидаемый текст: %s, но получен: %s", "bar", string(result))
 	}
-
-	// Удаление тестового файла после теста
-	os.Remove(filename)
 }
