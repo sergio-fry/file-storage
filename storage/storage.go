@@ -1,6 +1,8 @@
 package storage
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"io"
 	"log"
 	"os"
@@ -33,5 +35,8 @@ func (s Storage) read(key string) io.ReadCloser {
 }
 
 func (s Storage) fileNameFromKey(key string) string {
-	return s.path + "/" + key
+	hash := md5.Sum([]byte(key))
+	keymd5 := hex.EncodeToString(hash[:])
+
+	return s.path + "/" + keymd5
 }
